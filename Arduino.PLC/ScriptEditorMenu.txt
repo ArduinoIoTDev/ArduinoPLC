@@ -1,0 +1,2 @@
+importscript /filename:"ScriptEditorMenu_ActionCommand.txt"
+importscript /filename:"ScriptEditorMenu_Environment.txt"

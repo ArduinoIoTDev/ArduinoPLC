@@ -1,0 +1,203 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7214A928-E3C9-4CF4-BF0A-8600DA89C80C}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HelloApps</RootNamespace>
+    <AssemblyName>Arduino.PLC</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ApplicationIcon>HelloApps_Violet.ico</ApplicationIcon>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>C:\Users\yjoonkim\Microsoft Robotics Dev Studio 2008 Express\bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\SPL.Helper.cs" />
+    <Compile Include="Common\SPL.Utils.cs" />
+    <Compile Include="Common\SPLCommon.cs" />
+    <Compile Include="EditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditorForm.Designer.cs">
+      <DependentUpon>EditorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\CommandEditorClass.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GUI\GUICommands.cs" />
+    <Compile Include="GUI\GUICommon.cs" />
+    <Compile Include="GUI\GUIUtils.cs" />
+    <Compile Include="GUI\PositionGrid.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="EditorForm.resx">
+      <DependentUpon>EditorForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="SketchViewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SketchViewForm.Designer.cs">
+      <DependentUpon>SketchViewForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SPLConsole.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SPLConsole.Designer.cs">
+      <DependentUpon>SPLConsole.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SPLEditor.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SPLHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ClosingIcon.ico" />
+    <Content Include="HelloApps.ico" />
+    <Content Include="HelloApps_Blue.ico" />
+    <Content Include="HelloApps_Violet.ico" />
+    <EmbeddedResource Include="SketchViewForm.resx">
+      <DependentUpon>SketchViewForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sketch_Part1.txt" />
+    <EmbeddedResource Include="Sketch_Part2.txt" />
+    <EmbeddedResource Include="SPLConsole.resx">
+      <DependentUpon>SPLConsole.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Resources\Generic-Green-icon16.png" />
+    <None Include="Resources\Generic-Orange-icon16.png" />
+    <None Include="Resources\Generic-Red-icon16.png" />
+    <None Include="Resources\Generic-Violet-icon16.png" />
+    <None Include="Resources\Generic-Yellow-icon16.png" />
+    <EmbeddedResource Include="ScriptEditorMenu_ActionCommand.txt" />
+    <None Include="Resources\Add.png" />
+    <None Include="Resources\CheckBox.png" />
+    <None Include="Resources\EmptyBox.png" />
+    <None Include="Resources\Expand.png" />
+    <None Include="Resources\Remove.png" />
+    <None Include="Resources\Shrink.png" />
+    <None Include="Resources\EtcBox.png" />
+    <None Include="Resources\Axis.png" />
+    <None Include="Resources\splg_icon1.png" />
+    <None Include="Resources\splg_icon2.png" />
+    <None Include="Resources\splg_icon3.png" />
+    <None Include="Resources\splg_icon4.png" />
+    <None Include="Resources\splg_icon5.png" />
+    <None Include="Resources\splg_icon6.png" />
+    <None Include="Resources\splg_icon7.png" />
+    <None Include="Resources\splg_icon8.png" />
+    <None Include="Resources\BooleanOp_Equal.png" />
+    <None Include="Resources\BooleanOp_Inter.png" />
+    <None Include="Resources\BooleanOp_Minus.png" />
+    <None Include="Resources\BooleanOp_Plus.png" />
+    <EmbeddedResource Include="ScriptEditorMenu.txt" />
+    <EmbeddedResource Include="ScriptEditorMenu_Environment.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="stdole">
+      <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <Private>True</Private>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,23 @@
+
+
+int main(void) 
+{ 
+    init();
+
+#if defined(USBCON) 
+    USB.attach(); 
+#endif 
+    
+    setup();
+    plc_setup(); 
+    
+    for (;;) { 
+        loop();
+        plc_loop(); 
+        if (serialEventRun)
+           serialEventRun(); 
+    } 
+        
+    return 0; 
+}
+ 

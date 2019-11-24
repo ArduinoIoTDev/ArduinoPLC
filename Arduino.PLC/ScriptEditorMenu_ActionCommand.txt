@@ -1,0 +1,7 @@
+﻿//################################
+inserttab  /tabtext:"[0] Connections"	/eng:"[0] Logic Commands"
+//################################
+
+addnode  /name:"HLine"  /text:"[0-1]    Horizontal Line"  /eng:"[0-1]    HLine"  /type:cmd  /image:5  /forecolor:Crimson  /tooltiptext:  
+
+addnode  /name:"VLine"  /text:"[0-2]    Vertical Line"  /eng:"[0-2]    VLine"  /type:cmd  /image:5  /forecolor:Crimson  /tooltiptext:  
