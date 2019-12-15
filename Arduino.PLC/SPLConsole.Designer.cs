@@ -46,6 +46,14 @@
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.textBox_sketch = new System.Windows.Forms.TextBox();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.textBox_raw = new System.Windows.Forms.TextBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.button6 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.timer_exec = new System.Windows.Forms.Timer(this.components);
             this.timer_monitering = new System.Windows.Forms.Timer(this.components);
             this.timer_serial_receive = new System.Windows.Forms.Timer(this.components);
@@ -59,6 +67,9 @@
             this.panelControl3.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.tabPage4.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -215,6 +226,8 @@
             // tabControl2
             // 
             this.tabControl2.Controls.Add(this.tabPage3);
+            this.tabControl2.Controls.Add(this.tabPage2);
+            this.tabControl2.Controls.Add(this.tabPage4);
             this.tabControl2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl2.Location = new System.Drawing.Point(0, 0);
             this.tabControl2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -246,6 +259,91 @@
             this.textBox_sketch.Size = new System.Drawing.Size(323, 496);
             this.textBox_sketch.TabIndex = 1;
             this.textBox_sketch.WordWrap = false;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.textBox_raw);
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(329, 504);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Sketch Code";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // textBox_raw
+            // 
+            this.textBox_raw.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBox_raw.Location = new System.Drawing.Point(3, 3);
+            this.textBox_raw.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.textBox_raw.Multiline = true;
+            this.textBox_raw.Name = "textBox_raw";
+            this.textBox_raw.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBox_raw.Size = new System.Drawing.Size(323, 498);
+            this.textBox_raw.TabIndex = 2;
+            this.textBox_raw.WordWrap = false;
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.panel1);
+            this.tabPage4.Location = new System.Drawing.Point(4, 25);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(329, 504);
+            this.tabPage4.TabIndex = 2;
+            this.tabPage4.Text = "Testing";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.button6);
+            this.panel1.Controls.Add(this.button5);
+            this.panel1.Controls.Add(this.button4);
+            this.panel1.Controls.Add(this.button3);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(329, 504);
+            this.panel1.TabIndex = 0;
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(36, 249);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(222, 36);
+            this.button6.TabIndex = 3;
+            this.button6.Text = "P00000=0";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(36, 186);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(222, 36);
+            this.button5.TabIndex = 2;
+            this.button5.Text = "P00000=1";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(36, 94);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(222, 36);
+            this.button4.TabIndex = 1;
+            this.button4.Text = "TESTING OFF";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(36, 34);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(222, 36);
+            this.button3.TabIndex = 0;
+            this.button3.Text = "TESTING ON";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // timer_exec
             // 
@@ -299,6 +397,10 @@
             this.tabControl2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -326,5 +428,13 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TextBox textBox_raw;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button6;
     }
 }

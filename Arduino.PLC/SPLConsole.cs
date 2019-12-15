@@ -267,6 +267,7 @@ namespace HelloApps
 
                 _sketch_script = lines;
                 textBox_sketch.Text = lines_with_number;
+                textBox_raw.Text = lines;
             }
         }
 
@@ -1473,8 +1474,7 @@ namespace HelloApps
                     DoEventsLoop(100);
                     //##################################################
 
-                    if (_required_serial_monitoring)
-                        Serial_Monitoring();
+                    Serial_Monitoring();
 
                     //##################################################
                     DoEventsLoop(100);
@@ -2137,8 +2137,44 @@ namespace HelloApps
 
                 log_info_str = Encoding.ASCII.GetString(recv_bytes);
 
-                if (log_info_str != string.Empty)
-                    LogInfo(log_info_str);
+
+
+                if (!string.IsNullOrEmpty(log_info_str))
+                {
+                    if (GlobalVariables.MONITORING_MODE)
+                    {
+                        string[] recv_items = log_info_str.Split(new char[]{'[', ']'}, StringSplitOptions.RemoveEmptyEntries);
+
+                        if (recv_items != null && recv_items.Length > 0)
+                        {
+                            for (int i = 0; i < recv_items.Length; i++)
+                            {
+                                string recv_str = recv_items[i].Trim();
+
+                                string[] item_arr = recv_str.Split(new char[]{'='}, StringSplitOptions.RemoveEmptyEntries);
+
+                                if (item_arr != null && item_arr.Length == 2)
+                                {
+                                    if (!GlobalVariables.GLOVAL_VARIABlE_LIST.ContainsKey(item_arr[0].Trim()))
+                                    {
+                                        GlobalVariables.GLOVAL_VARIABlE_LIST.Add(item_arr[0].Trim(), item_arr[1].Trim());
+                                    }
+                                    else
+                                    {
+                                        GlobalVariables.GLOVAL_VARIABlE_LIST[item_arr[0].Trim()] = item_arr[1].Trim();
+                                    }
+                                }
+                            }
+                        }
+
+                        //LogInfo(log_info_str);
+                    }
+                    else
+                    {
+                        LogInfo(log_info_str);
+                    }
+                }
+
             }
             catch { }
 
@@ -2213,6 +2249,14 @@ namespace HelloApps
                     _serialPort.DataReceived += new SerialDataReceivedEventHandler(serialPort_DataReceived);
 
                     LogInfoLine("Open Serial Port - " + comPort);
+
+
+                    if (GlobalVariables.MONITORING_MODE)
+                    {
+                        SendSerialData("[MONITORING_ON]");
+                        LogInfoLine("Send [MONITORING_ON]");
+                    }
+
                 }
                 catch (Exception ex)
                 {
@@ -2410,6 +2454,42 @@ namespace HelloApps
                 }
             }
             catch { }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (IsSerialOpen)
+            {
+                SendSerialData("[TEST_ON]");
+                LogInfoLine("Send [TEST_ON]");
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (IsSerialOpen)
+            {
+                SendSerialData("[TEST_OFF]");
+                LogInfoLine("Send [TEST_OFF]");
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (IsSerialOpen)
+            {
+                SendSerialData("[P00000=1]");
+                LogInfoLine("Send [P00000=1]");
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            if (IsSerialOpen)
+            {
+                SendSerialData("[P00000=0]");
+                LogInfoLine("Send [P00000=0]");
+            }
         }
 
     }
