@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.ComponentModel;
 
+
 namespace HelloApps.GUI
 {
     public class CommandEditorClass : ContainerControl
@@ -73,6 +74,23 @@ namespace HelloApps.GUI
             this.ImeMode = ImeMode.Alpha;
 
             this.Initialize();
+        }
+
+
+
+        public void InvalidateAllCells()
+        {
+            for (int y = 0; y < LadderYSize; y++)
+            {
+                for (int x = 0; x < LadderXSize; x++)
+                {
+                    if (LadderCellList[y, x] != null)
+                    {
+                        LadderCellItem cell_item = LadderCellList[y, x];
+                        cell_item.Invalidate();
+                    }
+                }
+            }
         }
 
 
@@ -529,6 +547,18 @@ namespace HelloApps.GUI
         public Brush BgColor = new SolidBrush(Color.FromArgb(200, 200, 200));
         public Brush ShadowColor = new SolidBrush(Color.FromArgb(170, 170, 170));
 
+        public Brush BgColor_org = new SolidBrush(Color.FromArgb(200, 200, 200));
+        public Brush ShadowColor_org = new SolidBrush(Color.FromArgb(170, 170, 170));
+
+        public Brush BgColor_input = new SolidBrush(Color.FromArgb(0, 128, 0));
+        public Brush ShadowColor_input = new SolidBrush(Color.FromArgb(0, 98, 0));
+
+        public Brush BgColor_output = new SolidBrush(Color.FromArgb(255, 128, 0));
+        public Brush ShadowColor_output = new SolidBrush(Color.FromArgb(225, 98, 0));
+
+
+        public bool MonitoringMode = false;
+
         public CommandEditorClass ParentEditorClass = null;
 
 
@@ -621,7 +651,7 @@ namespace HelloApps.GUI
                             //no VLine in front
                             for (int x = cell_x - 1; x >= 0; x--)
                             {
-                                if (this.ParentEditorClass.LadderCellList[cell_y, x].CmdType == "VLine")
+                                if (this.ParentEditorClass.LadderCellList[cell_y, x].CmdType == "VLine" && this.ParentEditorClass.LadderCellList[cell_y, x].HasUpLine)
                                     do_flag = false;
                             }
 
@@ -633,7 +663,8 @@ namespace HelloApps.GUI
                     else if (recv_cmd == "Output" || recv_cmd == "MOutput" || recv_cmd == "TimerOutput" || recv_cmd == "CounterOutput"
                         || recv_cmd == "SET" || recv_cmd == "RESET" || recv_cmd == "END")
                     {
-                        if (this.IsOutputCell)
+                        //if (this.IsOutputCell)
+                        if (this.IsInputCell || this.IsOutputCell)
                         {
                             int cell_x = this.CELL_X;
                             int cell_y = this.CELL_Y;
@@ -643,8 +674,11 @@ namespace HelloApps.GUI
                             //no VLine in front
                             for (int x = cell_x - 1; x >= 0; x--)
                             {
-                                if (this.ParentEditorClass.LadderCellList[cell_y, x].CmdType == "VLine")
+                                if (this.ParentEditorClass.LadderCellList[cell_y, x].CmdType == "VLine" && this.ParentEditorClass.LadderCellList[cell_y, x].HasUpLine)
+                                {
+                                    //위쪽으로 연결되어 있는 경우는 출력이 연결될 수 없음
                                     do_flag = false;
+                                }
                             }
 
 
@@ -692,7 +726,7 @@ namespace HelloApps.GUI
                             //no VLine in front
                             for (int x = cell_x - 1; x >= 0; x--)
                             {
-                                if (this.ParentEditorClass.LadderCellList[cell_y, x].CmdType == "VLine")
+                                if (this.ParentEditorClass.LadderCellList[cell_y, x].CmdType == "VLine" && this.ParentEditorClass.LadderCellList[cell_y, x].HasUpLine)
                                     do_flag = false;
                             }
 
@@ -769,7 +803,7 @@ namespace HelloApps.GUI
                             //no VLine in front
                             for (int x = cell_x - 1; x >= 0; x--)
                             {
-                                if (this.ParentEditorClass.LadderCellList[cell_y, x].CmdType == "VLine")
+                                if (this.ParentEditorClass.LadderCellList[cell_y, x].CmdType == "VLine" && this.ParentEditorClass.LadderCellList[cell_y, x].HasUpLine)
                                     do_flag = false;
                             }
 
@@ -782,6 +816,11 @@ namespace HelloApps.GUI
                                 {
                                     this.CmdName = "P00000";
 
+                                    if (GlobalVariables.PLCType == "Mitsubishi")
+                                        this.CmdName = "X0";
+                                    else if (GlobalVariables.PLCType == "Siemens")
+                                        this.CmdName = "I0.0";
+
                                     if (this.ParentEditorClass.CmdNameTextList.ContainsKey(this.CmdName))
                                         this.CmdText = this.ParentEditorClass.CmdNameTextList[this.CmdName];
                                     else
@@ -789,7 +828,13 @@ namespace HelloApps.GUI
                                 }
                                 else if (recv_cmd == "InputB")
                                 {
-                                    this.CmdName = "P00000";
+                                    this.CmdName = "P00001";
+
+                                    if (GlobalVariables.PLCType == "Mitsubishi")
+                                        this.CmdName = "X1";
+                                    else if (GlobalVariables.PLCType == "Siemens")
+                                        this.CmdName = "I0.1";
+
 
                                     if (this.ParentEditorClass.CmdNameTextList.ContainsKey(this.CmdName))
                                         this.CmdText = this.ParentEditorClass.CmdNameTextList[this.CmdName];
@@ -800,6 +845,11 @@ namespace HelloApps.GUI
                                 {
                                     this.CmdName = "M00000";
 
+                                    if (GlobalVariables.PLCType == "Mitsubishi")
+                                        this.CmdName = "M0";
+                                    else if (GlobalVariables.PLCType == "Siemens")
+                                        this.CmdName = "M0.0";
+
                                     if (this.ParentEditorClass.CmdNameTextList.ContainsKey(this.CmdName))
                                         this.CmdText = this.ParentEditorClass.CmdNameTextList[this.CmdName];
                                     else
@@ -807,7 +857,13 @@ namespace HelloApps.GUI
                                 }
                                 else if (recv_cmd == "MInputB")
                                 {
-                                    this.CmdName = "M00000";
+                                    this.CmdName = "M00001";
+
+                                    if (GlobalVariables.PLCType == "Mitsubishi")
+                                        this.CmdName = "M1";
+                                    else if (GlobalVariables.PLCType == "Siemens")
+                                        this.CmdName = "M0.1";
+
 
                                     if (this.ParentEditorClass.CmdNameTextList.ContainsKey(this.CmdName))
                                         this.CmdText = this.ParentEditorClass.CmdNameTextList[this.CmdName];
@@ -819,6 +875,12 @@ namespace HelloApps.GUI
                                     this.CmdName = "T00000";
                                     //this.TimerValue = "10";
 
+                                    if (GlobalVariables.PLCType == "Mitsubishi")
+                                        this.CmdName = "T1";
+                                    else if (GlobalVariables.PLCType == "Siemens")
+                                        this.CmdName = "T1";
+
+
                                     if (this.ParentEditorClass.CmdNameTextList.ContainsKey(this.CmdName))
                                         this.CmdText = this.ParentEditorClass.CmdNameTextList[this.CmdName];
                                     else
@@ -826,8 +888,14 @@ namespace HelloApps.GUI
                                 }
                                 else if (recv_cmd == "TimerInputB")
                                 {
-                                    this.CmdName = "T00000";
+                                    this.CmdName = "T00001";
                                     //this.TimerValue = "10";
+
+                                    if (GlobalVariables.PLCType == "Mitsubishi")
+                                        this.CmdName = "T2";
+                                    else if (GlobalVariables.PLCType == "Siemens")
+                                        this.CmdName = "T2";
+
 
                                     if (this.ParentEditorClass.CmdNameTextList.ContainsKey(this.CmdName))
                                         this.CmdText = this.ParentEditorClass.CmdNameTextList[this.CmdName];
@@ -839,6 +907,12 @@ namespace HelloApps.GUI
                                     this.CmdName = "C00000";
                                     //this.CounterValue = "10";
 
+                                    if (GlobalVariables.PLCType == "Mitsubishi")
+                                        this.CmdName = "C1";
+                                    else if (GlobalVariables.PLCType == "Siemens")
+                                        this.CmdName = "C1";
+
+
                                     if (this.ParentEditorClass.CmdNameTextList.ContainsKey(this.CmdName))
                                         this.CmdText = this.ParentEditorClass.CmdNameTextList[this.CmdName];
                                     else
@@ -846,8 +920,14 @@ namespace HelloApps.GUI
                                 }
                                 else if (recv_cmd == "CounterInputB")
                                 {
-                                    this.CmdName = "C00000";
+                                    this.CmdName = "C00001";
                                     //this.CounterValue = "10";
+
+                                    if (GlobalVariables.PLCType == "Mitsubishi")
+                                        this.CmdName = "C2";
+                                    else if (GlobalVariables.PLCType == "Siemens")
+                                        this.CmdName = "C2";
+
 
                                     if (this.ParentEditorClass.CmdNameTextList.ContainsKey(this.CmdName))
                                         this.CmdText = this.ParentEditorClass.CmdNameTextList[this.CmdName];
@@ -887,7 +967,8 @@ namespace HelloApps.GUI
                     else if (recv_cmd == "Output" || recv_cmd == "MOutput" || recv_cmd == "TimerOutput" || recv_cmd == "CounterOutput"
                         || recv_cmd == "SET" || recv_cmd == "RESET" || recv_cmd == "END")
                     {
-                        if (this.IsOutputCell)
+                        //if (this.IsOutputCell)
+                        if (this.IsInputCell || this.IsOutputCell)
                         {
                             int cell_x = this.CELL_X;
                             int cell_y = this.CELL_Y;
@@ -897,45 +978,94 @@ namespace HelloApps.GUI
                             //no VLine in front
                             for (int x = cell_x - 1; x >= 0; x--)
                             {
-                                if (this.ParentEditorClass.LadderCellList[cell_y, x].CmdType == "VLine")
+                                if (this.ParentEditorClass.LadderCellList[cell_y, x].CmdType == "VLine" && this.ParentEditorClass.LadderCellList[cell_y, x].HasUpLine)
                                     do_flag = false;
                             }
 
 
                             if (do_flag)
                             {
+
+                                //배경 색상을 변경해 줌
+                                //그려주는 쪽에서 변경함
+                                //this.ParentEditorClass.LadderCellList[cell_y, cell_x].BgColor = new SolidBrush(Color.FromArgb(255, 128, 0));
+                                //this.ParentEditorClass.LadderCellList[cell_y, cell_x].ShadowColor = new SolidBrush(Color.FromArgb(225, 98, 0));
+
+
+
                                 this.CmdType = recv_cmd;
 
                                 if (recv_cmd == "Output")
                                 {
                                     this.CmdName = "P00040";
+
+                                    if (GlobalVariables.PLCType == "Mitsubishi")
+                                        this.CmdName = "Y10";
+                                    else if (GlobalVariables.PLCType == "Siemens")
+                                        this.CmdName = "Q0.0";
+
+
                                     this.CmdText = "Output";
                                 }
                                 else if (recv_cmd == "MOutput")
                                 {
                                     this.CmdName = "M00000";
+
+                                    if (GlobalVariables.PLCType == "Mitsubishi")
+                                        this.CmdName = "M0";
+                                    else if (GlobalVariables.PLCType == "Siemens")
+                                        this.CmdName = "M0.0";
+
+
                                     this.CmdText = "MemoryRelay";
                                 }
                                 else if (recv_cmd == "TimerOutput")
                                 {
                                     this.CmdName = "T00000";
+
+                                    if (GlobalVariables.PLCType == "Mitsubishi")
+                                        this.CmdName = "T1";
+                                    else if (GlobalVariables.PLCType == "Siemens")
+                                        this.CmdName = "T1";
+
+
                                     this.CmdText = "Timer";
                                     this.TimerValue = "10";
                                 }
                                 else if (recv_cmd == "CounterOutput")
                                 {
                                     this.CmdName = "C00000";
+
+                                    if (GlobalVariables.PLCType == "Mitsubishi")
+                                        this.CmdName = "C1";
+                                    else if (GlobalVariables.PLCType == "Siemens")
+                                        this.CmdName = "C1";
+
+
                                     this.CmdText = "Counter";
                                     this.CounterValue = "10";
                                 }
                                 else if (recv_cmd == "SET")
                                 {
                                     this.CmdName = "M00000";
+
+                                    if (GlobalVariables.PLCType == "Mitsubishi")
+                                        this.CmdName = "M0";
+                                    else if (GlobalVariables.PLCType == "Siemens")
+                                        this.CmdName = "M0.0";
+
+
                                     this.CmdText = "SET";
                                 }
                                 else if (recv_cmd == "RESET")
                                 {
                                     this.CmdName = "M00000";
+
+                                    if (GlobalVariables.PLCType == "Mitsubishi")
+                                        this.CmdName = "M0";
+                                    else if (GlobalVariables.PLCType == "Siemens")
+                                        this.CmdName = "M0.0";
+
                                     this.CmdText = "RESET";
                                 }
                                 else if (recv_cmd == "END")
@@ -986,7 +1116,7 @@ namespace HelloApps.GUI
                             //no VLine in front
                             for (int x = cell_x - 1; x >= 0; x--)
                             {
-                                if (this.ParentEditorClass.LadderCellList[cell_y, x].CmdType == "VLine")
+                                if (this.ParentEditorClass.LadderCellList[cell_y, x].CmdType == "VLine" && this.ParentEditorClass.LadderCellList[cell_y, x].HasUpLine)
                                     do_flag = false;
                             }
 
@@ -1036,7 +1166,7 @@ namespace HelloApps.GUI
                             //no VLine in front
                             for (int x = cell_x - 1; x >= 0; x--)
                             {
-                                if (this.ParentEditorClass.LadderCellList[cell_y, x].CmdType == "VLine")
+                                if (this.ParentEditorClass.LadderCellList[cell_y, x].CmdType == "VLine" && this.ParentEditorClass.LadderCellList[cell_y, x].HasUpLine)
                                     do_flag = false;
                             }
 
@@ -1317,13 +1447,75 @@ namespace HelloApps.GUI
                 int cell_y = this.CELL_Y;
 
 
+                //##########################################################
+                //  각 명령어를 그려주는 부분
+                //##########################################################
+
                 //nornal state background
                 if (this.IsFirstCell || this.IsInputCell || this.IsOutputCell)
                 {
                     if (!string.IsNullOrEmpty(this.CmdType) && this.CmdType != "HLine")
                     {
-                        bufferedgraphic.Graphics.FillPath(this.ShadowColor, _shadow_path);
-                        bufferedgraphic.Graphics.FillPath(this.BgColor, _shape_path);
+                        //배경을 그려준다.
+
+                        if (GlobalVariables.MONITORING_MODE)
+                        {
+                            if (GlobalVariables.GLOVAL_VARIABlE_LIST.ContainsKey(this.CmdName))
+                            {
+                                if (GlobalVariables.GLOVAL_VARIABlE_LIST[this.CmdName] == "0")
+                                {
+                                    //Gray Color
+                                    bufferedgraphic.Graphics.FillPath(this.ShadowColor_org, _shadow_path);
+                                    bufferedgraphic.Graphics.FillPath(this.BgColor_org, _shape_path);
+                                }
+                                else
+                                {
+                                    if (this.CmdType == "InputA" || this.CmdType == "InputB" || this.CmdType == "MInputA" || this.CmdType == "MInputB"
+                                        || this.CmdType == "TimerInputA" || this.CmdType == "TimerInputB" || this.CmdType == "CounterInputA" || this.CmdType == "CounterInputB")
+                                    {
+                                        bufferedgraphic.Graphics.FillPath(this.ShadowColor_input, _shadow_path);
+                                        bufferedgraphic.Graphics.FillPath(this.BgColor_input, _shape_path);
+                                    }
+                                    else if (this.CmdType == "Output" || this.CmdType == "MOutput" || this.CmdType == "TimerOutput" || this.CmdType == "CounterOutput"
+                                        || this.CmdType == "SET" || this.CmdType == "RESET" || this.CmdType == "END")
+                                    {
+                                        bufferedgraphic.Graphics.FillPath(this.ShadowColor_output, _shadow_path);
+                                        bufferedgraphic.Graphics.FillPath(this.BgColor_output, _shape_path);
+                                    }
+                                    else
+                                    {
+                                        bufferedgraphic.Graphics.FillPath(this.ShadowColor, _shadow_path);
+                                        bufferedgraphic.Graphics.FillPath(this.BgColor, _shape_path);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                //Gray Color
+                                bufferedgraphic.Graphics.FillPath(this.ShadowColor_org, _shadow_path);
+                                bufferedgraphic.Graphics.FillPath(this.BgColor_org, _shape_path);
+                            }
+                        }
+                        else
+                        {
+                            if (this.CmdType == "InputA" || this.CmdType == "InputB" || this.CmdType == "MInputA" || this.CmdType == "MInputB"
+                                || this.CmdType == "TimerInputA" || this.CmdType == "TimerInputB" || this.CmdType == "CounterInputA" || this.CmdType == "CounterInputB")
+                            {
+                                bufferedgraphic.Graphics.FillPath(this.ShadowColor_input, _shadow_path);
+                                bufferedgraphic.Graphics.FillPath(this.BgColor_input, _shape_path);
+                            }
+                            else if (this.CmdType == "Output" || this.CmdType == "MOutput" || this.CmdType == "TimerOutput" || this.CmdType == "CounterOutput"
+                                || this.CmdType == "SET" || this.CmdType == "RESET" || this.CmdType == "END")
+                            {
+                                bufferedgraphic.Graphics.FillPath(this.ShadowColor_output, _shadow_path);
+                                bufferedgraphic.Graphics.FillPath(this.BgColor_output, _shape_path);
+                            }
+                            else
+                            {
+                                bufferedgraphic.Graphics.FillPath(this.ShadowColor, _shadow_path);
+                                bufferedgraphic.Graphics.FillPath(this.BgColor, _shape_path);
+                            }
+                        }
                     }
                 }
 
