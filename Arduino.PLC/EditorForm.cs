@@ -351,8 +351,10 @@ namespace HelloApps
 
                 if (ladder_cell_item.ArduinoMappingMode != "SCRIPT" && string.IsNullOrEmpty(textBox3.Text))
                 {
-                    if (ladder_cell_item.CmdType == "InputA" || ladder_cell_item.CmdType == "InputB")
+                    if (ladder_cell_item.CmdType == "InputA")
                         ladder_cell_item.ArduinoPin = "2";
+                    else if (ladder_cell_item.CmdType == "InputB")
+                        ladder_cell_item.ArduinoPin = "3";
                     else if (ladder_cell_item.CmdType == "Output")
                         ladder_cell_item.ArduinoPin = "13";
 
@@ -1793,11 +1795,28 @@ namespace HelloApps
         }
 
 
+        private string GetCurTimeStr()
+        {
+            string res = string.Empty;
+
+            DateTime nn = System.DateTime.Now;
+
+            res = nn.Hour.ToString().PadLeft(2, '0') + ":" + nn.Minute.ToString().PadLeft(2, '0') + ":" + nn.Second.ToString().PadLeft(2, '0') + "." + nn.Millisecond.ToString().PadLeft(3, '0');
+
+            return res;
+        }
+
+       
+
 
         private void LauncheService(string batchRunFileName, SPLCommon.SPLEngineLaunchMode execute_mode)
         {
             if (execute_mode == SPLCommon.SPLEngineLaunchMode.Default)
                 Cursor.Current = Cursors.WaitCursor;
+
+
+            GlobalVariables.GLOVAL_VARIABlE_LIST.Clear();
+
 
             try
             {
@@ -1872,6 +1891,14 @@ namespace HelloApps
                 string file_ext = Path.GetExtension(_currentFile).ToLower();
 
                 //###########################################################################################
+
+                DateTime nn_start = System.DateTime.Now;
+
+                listBox2.Items.Clear();
+                listBox2.Items.Add("Start Converting: " + GetCurTimeStr());
+
+
+
 
                 bool has_setup = customTabControl1.CurCmdEditorClass.ArduinoMainScript.Contains("setup");
                 bool has_loop = customTabControl1.CurCmdEditorClass.ArduinoMainScript.Contains("loop");
@@ -1965,6 +1992,12 @@ namespace HelloApps
                         input_var_lines = input_var_lines + "int " + INPUT_VAR_LIST[i] + "_count" + " = 0;" + Environment.NewLine;
                         CREATED_VAR_LIST.Add(INPUT_VAR_LIST[i] + "_count", "");
                     }
+
+                    if (!CREATED_VAR_LIST.ContainsKey(INPUT_VAR_LIST[i] + "_sim"))
+                    {
+                        input_var_lines = input_var_lines + "int " + INPUT_VAR_LIST[i] + "_sim" + " = 0;" + Environment.NewLine;
+                        CREATED_VAR_LIST.Add(INPUT_VAR_LIST[i] + "_sim", "");
+                    }
                 }
 
                 string output_var_lines = string.Empty;
@@ -1987,6 +2020,12 @@ namespace HelloApps
                         output_var_lines = output_var_lines + "int " + OUTPUT_VAR_LIST[i] + "_count" + " = 0;" + Environment.NewLine;
                         CREATED_VAR_LIST.Add(OUTPUT_VAR_LIST[i] + "_count", "");
                     }
+
+                    //if (!CREATED_VAR_LIST.ContainsKey(OUTPUT_VAR_LIST[i] + "_sim"))
+                    //{
+                    //    output_var_lines = output_var_lines + "int " + OUTPUT_VAR_LIST[i] + "_sim" + " = 0;" + Environment.NewLine;
+                    //    CREATED_VAR_LIST.Add(OUTPUT_VAR_LIST[i] + "_sim", "");
+                    //}
                 }
 
 
@@ -2066,10 +2105,23 @@ namespace HelloApps
                     if (!CREATED_VAR_LIST.ContainsKey(TIMER_VAR_LIST[i]))
                     {
                         timer_var_lines = timer_var_lines + "int " + TIMER_VAR_LIST[i] + " = 0;" + Environment.NewLine;
-                        timer_var_lines = timer_var_lines + "unsigned long " + TIMER_VAR_LIST[i] + "_last_chk_time = 0;" + Environment.NewLine;
-                        timer_var_lines = timer_var_lines + "unsigned long " + TIMER_VAR_LIST[i] + "_target_time = " + TIMER_VALUE_LIST[TIMER_VAR_LIST[i]] + ";" + Environment.NewLine;
+                        //timer_var_lines = timer_var_lines + "unsigned long " + TIMER_VAR_LIST[i] + "_last_chk_time = 0;" + Environment.NewLine;
+                        //timer_var_lines = timer_var_lines + "unsigned long " + TIMER_VAR_LIST[i] + "_target_time = " + TIMER_VALUE_LIST[TIMER_VAR_LIST[i]] + ";" + Environment.NewLine;
                         CREATED_VAR_LIST.Add(TIMER_VAR_LIST[i], "");
                     }
+
+                    if (!CREATED_VAR_LIST.ContainsKey(TIMER_VAR_LIST[i] + "_last_chk_time"))
+                    {
+                        timer_var_lines = timer_var_lines + "unsigned long " + TIMER_VAR_LIST[i] + "_last_chk_time = 0;" + Environment.NewLine;
+                        CREATED_VAR_LIST.Add(TIMER_VAR_LIST[i] + "_last_chk_time", "");
+                    }
+
+                    if (!CREATED_VAR_LIST.ContainsKey(TIMER_VAR_LIST[i] + "_target_time"))
+                    {
+                        timer_var_lines = timer_var_lines + "unsigned long " + TIMER_VAR_LIST[i] + "_target_time = " + TIMER_VALUE_LIST[TIMER_VAR_LIST[i]] + ";" + Environment.NewLine;
+                        CREATED_VAR_LIST.Add(TIMER_VAR_LIST[i] + "_target_time", "");
+                    }
+
 
                     if (!CREATED_VAR_LIST.ContainsKey(TIMER_VAR_LIST[i] + "_set"))
                     {
@@ -2090,10 +2142,28 @@ namespace HelloApps
                     if (!CREATED_VAR_LIST.ContainsKey(COUNTER_VAR_LIST[i]))
                     {
                         counter_var_lines = counter_var_lines + "int " + COUNTER_VAR_LIST[i] + " = 0;" + Environment.NewLine;
-                        counter_var_lines = counter_var_lines + "int " + COUNTER_VAR_LIST[i] + "_pre_status = 0;" + Environment.NewLine;
-                        counter_var_lines = counter_var_lines + "int " + COUNTER_VAR_LIST[i] + "_count = 0;" + Environment.NewLine;
-                        counter_var_lines = counter_var_lines + "int " + COUNTER_VAR_LIST[i] + "_target_count = " + COUNTER_VALUE_LIST[COUNTER_VAR_LIST[i]] + ";" + Environment.NewLine;
+                        //counter_var_lines = counter_var_lines + "int " + COUNTER_VAR_LIST[i] + "_pre_status = 0;" + Environment.NewLine;
+                        //counter_var_lines = counter_var_lines + "int " + COUNTER_VAR_LIST[i] + "_count = 0;" + Environment.NewLine;
+                        //counter_var_lines = counter_var_lines + "int " + COUNTER_VAR_LIST[i] + "_target_count = " + COUNTER_VALUE_LIST[COUNTER_VAR_LIST[i]] + ";" + Environment.NewLine;
                         CREATED_VAR_LIST.Add(COUNTER_VAR_LIST[i], "");
+                    }
+
+                    if (!CREATED_VAR_LIST.ContainsKey(COUNTER_VAR_LIST[i] + "_pre_status"))
+                    {
+                        counter_var_lines = counter_var_lines + "int " + COUNTER_VAR_LIST[i] + "_pre_status = 0;" + Environment.NewLine;
+                        CREATED_VAR_LIST.Add(COUNTER_VAR_LIST[i] + "_pre_status", "");
+                    }
+
+                    if (!CREATED_VAR_LIST.ContainsKey(COUNTER_VAR_LIST[i] + "_count"))
+                    {
+                        counter_var_lines = counter_var_lines + "int " + COUNTER_VAR_LIST[i] + "_count = 0;" + Environment.NewLine;
+                        CREATED_VAR_LIST.Add(COUNTER_VAR_LIST[i] + "_count", "");
+                    }
+
+                    if (!CREATED_VAR_LIST.ContainsKey(COUNTER_VAR_LIST[i] + "_target_count"))
+                    {
+                        counter_var_lines = counter_var_lines + "int " + COUNTER_VAR_LIST[i] + "_target_count = " + COUNTER_VALUE_LIST[COUNTER_VAR_LIST[i]] + ";" + Environment.NewLine;
+                        CREATED_VAR_LIST.Add(COUNTER_VAR_LIST[i] + "_target_count", "");
                     }
 
                     if (!CREATED_VAR_LIST.ContainsKey(COUNTER_VAR_LIST[i] + "_set"))
@@ -2110,11 +2180,18 @@ namespace HelloApps
                     input_script_def_lines = input_script_def_lines + INPUT_SCRIPT_DEF_LIST[i] + Environment.NewLine + Environment.NewLine;
                 }
 
+                //string input_pin_lines = "if (simulation_mode == 0)" + Environment.NewLine;
+                //input_pin_lines += "{" + Environment.NewLine;
+
                 string input_pin_lines = string.Empty;
+
                 for (int i = 0; i < INPUT_PIN_LIST.Count; i++)
                 {
                     input_pin_lines = input_pin_lines + INPUT_PIN_LIST[i] + Environment.NewLine;
                 }
+
+                //input_pin_lines += "}" + Environment.NewLine;
+
 
                 string input_script_lines = string.Empty;
                 for (int i = 0; i < INPUT_SCRIPT_LIST.Count; i++)
@@ -2130,11 +2207,18 @@ namespace HelloApps
                     output_script_def_lines = output_script_def_lines + OUTPUT_SCRIPT_DEF_LIST[i] + Environment.NewLine + Environment.NewLine;
                 }
 
+                //string output_pin_lines = "if (simulation_mode == 0)" + Environment.NewLine;
+                //output_pin_lines += "{" + Environment.NewLine;
+
                 string output_pin_lines = string.Empty;
+
                 for (int i = 0; i < OUTPUT_PIN_LIST.Count; i++)
                 {
                     output_pin_lines = output_pin_lines + OUTPUT_PIN_LIST[i] + Environment.NewLine;
                 }
+
+                //output_pin_lines += "}" + Environment.NewLine;
+
 
                 string output_script_lines = string.Empty;
                 for (int i = 0; i < OUTPUT_SCRIPT_LIST.Count; i++)
@@ -2144,6 +2228,16 @@ namespace HelloApps
 
 
                 plc_script += Environment.NewLine;
+
+
+                plc_script += "" + Environment.NewLine;
+                plc_script += "int simulation_mode = 0;" + Environment.NewLine;
+                plc_script += "int testing_mode = 0;" + Environment.NewLine;
+                plc_script += "int monitoring_mode = 0;" + Environment.NewLine;
+                plc_script += "" + Environment.NewLine;
+                plc_script += "unsigned long testing_start_time = 0;" + Environment.NewLine;
+                plc_script += "unsigned long testing_end_time = 0;" + Environment.NewLine;
+                plc_script += "" + Environment.NewLine;
 
                 plc_script = plc_script + "void plc_setup()" + Environment.NewLine;
                 plc_script = plc_script + "{" + Environment.NewLine;
@@ -2177,8 +2271,87 @@ namespace HelloApps
                 plc_script += Environment.NewLine;
                 plc_script += "void plc_loop()" + Environment.NewLine;
                 plc_script += "{" + Environment.NewLine;
+
+
+                plc_script += "while (Serial.available())" + Environment.NewLine;
+                plc_script += "{" + Environment.NewLine;
+                plc_script += "    String s = Serial.readStringUntil('[');" + Environment.NewLine;
+                plc_script += "    String token = Serial.readStringUntil(']');" + Environment.NewLine;
+                plc_script += "" + Environment.NewLine;
+
+                plc_script += "    if (token.length() > 0)" + Environment.NewLine;
+                plc_script += "    {" + Environment.NewLine;
+                plc_script += "         if (token == \"SIM_ON\")" + Environment.NewLine;
+                plc_script += "         {" + Environment.NewLine;
+                plc_script += "             simulation_mode = 1;" + Environment.NewLine;
+                plc_script += "         }" + Environment.NewLine;
+                plc_script += "         else if (token == \"SIM_OFF\")" + Environment.NewLine;
+                plc_script += "         {" + Environment.NewLine;
+                plc_script += "             simulation_mode = 0;" + Environment.NewLine;
+                plc_script += "         }" + Environment.NewLine;
+                plc_script += "         else if (token == \"TEST_ON\")" + Environment.NewLine;
+                plc_script += "         {" + Environment.NewLine;
+                plc_script += "             testing_mode = 1;" + Environment.NewLine;
+                plc_script += "         }" + Environment.NewLine;
+                plc_script += "         else if (token == \"TEST_OFF\")" + Environment.NewLine;
+                plc_script += "         {" + Environment.NewLine;
+                plc_script += "             testing_mode = 0;" + Environment.NewLine;
+                plc_script += "         }" + Environment.NewLine;
+                plc_script += "         else if (token == \"MONITORING_ON\")" + Environment.NewLine;
+                plc_script += "         {" + Environment.NewLine;
+                plc_script += "             monitoring_mode = 1;" + Environment.NewLine;
+                plc_script += "         }" + Environment.NewLine;
+                plc_script += "         else if (token == \"MONITORING_OFF\")" + Environment.NewLine;
+                plc_script += "         {" + Environment.NewLine;
+                plc_script += "             monitoring_mode = 0;" + Environment.NewLine;
+                plc_script += "         }" + Environment.NewLine;
+
+                //Ganerate input sim variables
+
+                for (int i = 0; i < INPUT_VAR_LIST.Count; i++)
+                {
+                    plc_script += "     else if (token == \"" + INPUT_VAR_LIST[i] + "=0\")" + Environment.NewLine;
+                    plc_script += "     {" + Environment.NewLine;
+                    plc_script += "         " + INPUT_VAR_LIST[i] + "_sim = 1;" + Environment.NewLine;
+                    plc_script += "         " + INPUT_VAR_LIST[i] + " = 0;" + Environment.NewLine;
+                    plc_script += "     }" + Environment.NewLine;
+                    plc_script += "     else if (token == \"" + INPUT_VAR_LIST[i] + "=1\")" + Environment.NewLine;
+                    plc_script += "     {" + Environment.NewLine;
+                    plc_script += "          " + INPUT_VAR_LIST[i] + "_sim = 1;" + Environment.NewLine;
+                    plc_script += "          " + INPUT_VAR_LIST[i] + " = 1;" + Environment.NewLine;
+                    plc_script += "     }" + Environment.NewLine;
+                }
+
+
+                plc_script += "         else " + Environment.NewLine;
+                plc_script += "         {" + Environment.NewLine;
+                plc_script += "              Serial.print(\"[\");" + Environment.NewLine;
+                plc_script += "              Serial.print(token);" + Environment.NewLine;
+                plc_script += "              Serial.println(\"]\");" + Environment.NewLine;
+                plc_script += "         }" + Environment.NewLine;
+
+                plc_script += "" + Environment.NewLine;
+                
+                
+                plc_script += "    }" + Environment.NewLine;
+                plc_script += "}" + Environment.NewLine;
+
+
+
+
+                plc_script += "" + Environment.NewLine;
+                plc_script += "if (testing_mode == 1)" + Environment.NewLine;
+                plc_script += "{" + Environment.NewLine;
+                plc_script += "    testing_start_time = millis();" + Environment.NewLine;
+                plc_script += "    Serial.print(\"#testing_start_time: \");" + Environment.NewLine;
+                plc_script += "    Serial.print(testing_start_time);" + Environment.NewLine;
+                plc_script += "    Serial.println(\"ms\");" + Environment.NewLine;
+                plc_script += "}" + Environment.NewLine;
+
+
                 plc_script += input_pin_lines + Environment.NewLine;
                 plc_script += input_script_lines + Environment.NewLine;
+
 
                 plc_script += Environment.NewLine;
                 plc_script += plc_loop_lines + Environment.NewLine;
@@ -2187,6 +2360,71 @@ namespace HelloApps
                 plc_script += output_pin_lines + Environment.NewLine;
                 plc_script += output_script_lines + Environment.NewLine;
 
+
+                plc_script += "" + Environment.NewLine;
+
+                plc_script += "if (testing_mode == 1)" + Environment.NewLine;
+                plc_script += "{" + Environment.NewLine;
+                plc_script += "    testing_end_time = millis();" + Environment.NewLine;
+                plc_script += "    Serial.print(\"#testing_end_time: \");" + Environment.NewLine;
+                plc_script += "    Serial.print(testing_end_time);" + Environment.NewLine;
+                plc_script += "    Serial.println(\"ms\");" + Environment.NewLine;
+                plc_script += "" + Environment.NewLine;
+                plc_script += "    unsigned long elapsed_time = testing_end_time - testing_start_time;" + Environment.NewLine;
+                plc_script += "    Serial.print(\"#elapsed_time: \");" + Environment.NewLine;
+                plc_script += "    Serial.print(elapsed_time);" + Environment.NewLine;
+                plc_script += "    Serial.println(\"ms\");" + Environment.NewLine;
+                plc_script += "}" + Environment.NewLine;
+
+
+                plc_script += "" + Environment.NewLine;
+                plc_script += "" + Environment.NewLine;
+
+                plc_script += "if (monitoring_mode == 1 || simulation_mode == 1)" + Environment.NewLine;
+                plc_script += "{" + Environment.NewLine;
+
+
+                for (int i = 0; i < INPUT_VAR_LIST.Count; i++)
+                {
+                    plc_script += "     Serial.print(\"[" + INPUT_VAR_LIST[i] + "\");" + Environment.NewLine;
+                    plc_script += "     Serial.print(\"=\");" + Environment.NewLine;
+                    plc_script += "     Serial.print(" + INPUT_VAR_LIST[i] + ");" + Environment.NewLine;
+                    plc_script += "     Serial.println(\"]\");" + Environment.NewLine;
+                }
+
+                for (int i = 0; i < OUTPUT_VAR_LIST.Count; i++)
+                {
+                    plc_script += "     Serial.print(\"[" + OUTPUT_VAR_LIST[i] + "\");" + Environment.NewLine;
+                    plc_script += "     Serial.print(\"=\");" + Environment.NewLine;
+                    plc_script += "     Serial.print(" + OUTPUT_VAR_LIST[i] + ");" + Environment.NewLine;
+                    plc_script += "     Serial.println(\"]\");" + Environment.NewLine;
+                }
+
+                for (int i = 0; i < M_VAR_LIST.Count; i++)
+                {
+                    plc_script += "     Serial.print(\"[" + M_VAR_LIST[i] + "\");" + Environment.NewLine;
+                    plc_script += "     Serial.print(\"=\");" + Environment.NewLine;
+                    plc_script += "     Serial.print(" + M_VAR_LIST[i] + ");" + Environment.NewLine;
+                    plc_script += "     Serial.println(\"]\");" + Environment.NewLine;
+                }
+
+
+                plc_script += "}" + Environment.NewLine;
+                
+
+                plc_script += "" + Environment.NewLine;
+                plc_script += "" + Environment.NewLine;
+
+                plc_script += "if (testing_mode == 1 || simulation_mode == 1 || monitoring_mode == 1)" + Environment.NewLine;
+                plc_script += "{" + Environment.NewLine;
+                plc_script += "     delay(100);" + Environment.NewLine;
+                plc_script += "}" + Environment.NewLine;
+
+                
+
+
+
+                //end of plc_loop
                 plc_script += "}" + Environment.NewLine;
 
 
@@ -2201,6 +2439,12 @@ namespace HelloApps
 
                 //###########################################################################################
 
+                DateTime nn_end = System.DateTime.Now;
+                listBox2.Items.Add("End Converting: " + GetCurTimeStr());
+
+                double total_millis = (nn_end - nn_start).TotalMilliseconds;
+
+                listBox2.Items.Add("Elapsed Time: " + total_millis.ToString() + "ms");
 
 
                 //console_form.ExecuteScriptFile(_currentFile);
@@ -2271,6 +2515,7 @@ namespace HelloApps
                             {
                                 if (!string.IsNullOrEmpty(cell_item.ArduinoPin))
                                 {
+                                    INPUT_PIN_LIST.Add("if ( " + cell_item.CmdName + "_sim == 0)");
                                     INPUT_PIN_LIST.Add(cell_item.CmdName + " = digitalRead(" + cell_item.ArduinoPin + ");");
                                     INPUT_PINMODE_LIST.Add(cell_item.ArduinoPin);
                                 }                                
@@ -2305,7 +2550,8 @@ namespace HelloApps
                             {
                                 if (!string.IsNullOrEmpty(cell_item.ArduinoPin))
                                 {
-                                    OUTPUT_PIN_LIST.Add("digitalWrite(" + cell_item.ArduinoPin + ", " + cell_item.ArduinoPin + ");");
+                                    //OUTPUT_PIN_LIST.Add("if ( " + cell_item.CmdName + "_sim == 0)");
+                                    OUTPUT_PIN_LIST.Add("digitalWrite(" + cell_item.ArduinoPin + ", " + cell_item.CmdName + ");");
                                     OUTPUT_PINMODE_LIST.Add(cell_item.ArduinoPin);
                                 }
                             }
@@ -2465,6 +2711,7 @@ namespace HelloApps
                                 line_cmd = "if (" + line_cmd + ") " + System.Environment.NewLine;
                                 line_cmd = line_cmd + "{" + System.Environment.NewLine;
                                 line_cmd = line_cmd + cell_item.CmdName + "_set = 1;" + System.Environment.NewLine;
+                                line_cmd = line_cmd + cell_item.CmdName + " = 1;" + System.Environment.NewLine;
                                 line_cmd = line_cmd + "}" + System.Environment.NewLine;
 
                                 plc_script_list.Add(line_cmd);
@@ -2478,6 +2725,7 @@ namespace HelloApps
                                 line_cmd = line_cmd + "{" + System.Environment.NewLine;
                                 line_cmd = line_cmd + cell_item.CmdName + "_set = 0;" + System.Environment.NewLine;
                                 line_cmd = line_cmd + cell_item.CmdName + "_count = 0;" + System.Environment.NewLine;
+                                line_cmd = line_cmd + cell_item.CmdName + " = 0;" + System.Environment.NewLine;
                                 line_cmd = line_cmd + "}" + System.Environment.NewLine;
 
                                 plc_script_list.Add(line_cmd);
@@ -2488,7 +2736,7 @@ namespace HelloApps
                             if (line_cmd != "true")
                             {
                                 line_cmd = "if (" + line_cmd + ") " + System.Environment.NewLine;
-                                line_cmd += line_cmd + "{" + System.Environment.NewLine;
+                                line_cmd += "{" + System.Environment.NewLine;
 
                                 line_cmd += "     unsigned long cur_time = millis();" + System.Environment.NewLine;
                                 line_cmd += "     unsigned long diff_time = cur_time - " + cell_item.CmdName + "_last_chk_time;" + System.Environment.NewLine;
@@ -2970,25 +3218,69 @@ namespace HelloApps
 
         private void button5_Click(object sender, EventArgs e)
         {
+
+            GlobalVariables.GLOVAL_VARIABlE_LIST.Clear();
+
             try
             {
-                SPLConsole console_form = new SPLConsole(_Serial_Port_List);
-
-                string com_name = HelloApps.Common.ParsingHelper.GetFirstToken(comboBox2.Text);
-
-                console_form._User_ComPort = com_name;
-
-                console_form._User_Baudrate = comboBox3.Text;
+                if (GlobalVariables.MONITORING_MODE == false)
+                {
+                    button5.Text = "Stop Monitoring";
+                    GlobalVariables.MONITORING_MODE = true;
 
 
-                console_form.SetSerialMoniteringMode(true);
-                console_form.ShowDialog();
+                    _spl_console = new SPLConsole(_Serial_Port_List);
+
+                    string com_name = HelloApps.Common.ParsingHelper.GetFirstToken(comboBox2.Text);
+
+                    _spl_console._User_ComPort = com_name;
+
+                    _spl_console._User_Baudrate = comboBox3.Text;
+
+
+                    _spl_console.SetSerialMoniteringMode(true);
+
+                    _spl_console.Show();
+                    //_spl_console.Hide();
+
+                    button5.BackColor = Color.FromArgb(0, 192, 0);
+                    button7.BackColor = Color.FromArgb(224, 224, 224);
+
+                    
+
+                    customTabControl1.CurCmdEditorClass.InvalidateAllCells();
+
+                    timer_monitoring.Enabled = true;
+                }
+                else
+                {
+                    timer_monitoring.Enabled = false;
+
+                    button5.Text = "Start Monitoring";
+                    GlobalVariables.MONITORING_MODE = false;
+
+                    _spl_console.Close();
+                    _spl_console.Dispose();
+                    _spl_console = null;
+
+                    button5.BackColor = Color.FromArgb(224, 224, 224);
+                    button7.BackColor = Color.FromArgb(0, 192, 0);
+                    
+                    customTabControl1.CurCmdEditorClass.InvalidateAllCells();
+                }
             }
             catch { }
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
+            if (GlobalVariables.MONITORING_MODE)
+            {
+                MessageBox.Show("Please stop monitoring mode!");
+                return;
+            }
+
+
             if (_timer_util_target_list.Count > 0)
             {
                 _timer_util_target_list.Enqueue("button7");
@@ -3193,12 +3485,15 @@ namespace HelloApps
         {
             string plc_type = comboBox1.Text;
 
+            GlobalVariables.PLCType = plc_type;
+
+            /*
             if (plc_type == "Mitsubishi" || plc_type == "Siemens")
             {
                 MessageBox.Show(plc_type + " manufacturer not yet supported!");
                 comboBox1.Text = "LSIS";
             }
-
+            */
         }
 
         private void comboBox2_Click(object sender, EventArgs e)
@@ -3210,6 +3505,16 @@ namespace HelloApps
                 comboBox2.Items.Add(port_name);
             }
             
+        }
+
+        private void timer_monitoring_Tick(object sender, EventArgs e)
+        {
+            timer_monitoring.Enabled = false;
+            
+            customTabControl1.CurCmdEditorClass.InvalidateAllCells();
+
+            if (GlobalVariables.MONITORING_MODE)
+                timer_monitoring.Enabled = true;
         }         
 
     }

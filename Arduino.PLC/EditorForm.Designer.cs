@@ -33,8 +33,6 @@
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.button10 = new System.Windows.Forms.Button();
-            this.button9 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
@@ -66,6 +64,7 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.customTabControl1 = new HelloApps.CustomTabControl();
             this.splitter3 = new System.Windows.Forms.Splitter();
             this.panel10 = new System.Windows.Forms.Panel();
             this.tabControl3 = new System.Windows.Forms.TabControl();
@@ -85,6 +84,13 @@
             this.label2 = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.button11 = new System.Windows.Forms.Button();
+            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.listBox2 = new System.Windows.Forms.ListBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.timer_form_load = new System.Windows.Forms.Timer(this.components);
             this.timer_auto_script = new System.Windows.Forms.Timer(this.components);
@@ -99,12 +105,7 @@
             this.tone210001000ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.procedureSetupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timer_util = new System.Windows.Forms.Timer(this.components);
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.button11 = new System.Windows.Forms.Button();
-            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.customTabControl1 = new HelloApps.CustomTabControl();
+            this.timer_monitoring = new System.Windows.Forms.Timer(this.components);
             this.panel1.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel9.SuspendLayout();
@@ -117,15 +118,14 @@
             this.tabControl3.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.panel5.SuspendLayout();
-            this.contextMenuStrip2.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel6.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.contextMenuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.button10);
-            this.panel1.Controls.Add(this.button9);
             this.panel1.Controls.Add(this.button7);
             this.panel1.Controls.Add(this.button6);
             this.panel1.Controls.Add(this.label9);
@@ -146,26 +146,6 @@
             this.panel1.Size = new System.Drawing.Size(1344, 121);
             this.panel1.TabIndex = 0;
             // 
-            // button10
-            // 
-            this.button10.Location = new System.Drawing.Point(1057, 20);
-            this.button10.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(68, 79);
-            this.button10.TabIndex = 14;
-            this.button10.Text = "Scale Down";
-            this.button10.UseVisualStyleBackColor = true;
-            // 
-            // button9
-            // 
-            this.button9.Location = new System.Drawing.Point(983, 20);
-            this.button9.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(68, 79);
-            this.button9.TabIndex = 13;
-            this.button9.Text = "Scale Up";
-            this.button9.UseVisualStyleBackColor = true;
-            // 
             // button7
             // 
             this.button7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
@@ -181,10 +161,10 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(1131, 20);
+            this.button6.Location = new System.Drawing.Point(983, 22);
             this.button6.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(68, 79);
+            this.button6.Size = new System.Drawing.Size(89, 79);
             this.button6.TabIndex = 11;
             this.button6.Text = "Close";
             this.button6.UseVisualStyleBackColor = true;
@@ -253,13 +233,14 @@
             // 
             // button5
             // 
+            this.button5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.button5.Location = new System.Drawing.Point(482, 20);
             this.button5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(110, 79);
             this.button5.TabIndex = 4;
-            this.button5.Text = "Monitoring";
-            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Text = "Start Monitoring";
+            this.button5.UseVisualStyleBackColor = false;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // button4
@@ -491,6 +472,19 @@
             this.panel3.Size = new System.Drawing.Size(1045, 660);
             this.panel3.TabIndex = 5;
             // 
+            // customTabControl1
+            // 
+            this.customTabControl1.AllowDrop = true;
+            this.customTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.customTabControl1.Location = new System.Drawing.Point(0, 0);
+            this.customTabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.customTabControl1.Name = "customTabControl1";
+            this.customTabControl1.SelectedIndex = 0;
+            this.customTabControl1.Size = new System.Drawing.Size(733, 660);
+            this.customTabControl1.TabIndex = 3;
+            this.customTabControl1.DragDrop += new System.Windows.Forms.DragEventHandler(this.customTabControl1_DragDrop);
+            this.customTabControl1.DragEnter += new System.Windows.Forms.DragEventHandler(this.customTabControl1_DragEnter);
+            // 
             // splitter3
             // 
             this.splitter3.Dock = System.Windows.Forms.DockStyle.Right;
@@ -515,6 +509,7 @@
             // 
             this.tabControl3.Controls.Add(this.tabPage5);
             this.tabControl3.Controls.Add(this.tabPage1);
+            this.tabControl3.Controls.Add(this.tabPage2);
             this.tabControl3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl3.Location = new System.Drawing.Point(0, 0);
             this.tabControl3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -719,6 +714,82 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Arduino Mapping Info";
             // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.panel6);
+            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Size = new System.Drawing.Size(299, 631);
+            this.tabPage1.TabIndex = 1;
+            this.tabPage1.Text = "User Sketch";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.button11);
+            this.panel6.Controls.Add(this.richTextBox2);
+            this.panel6.Controls.Add(this.label11);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel6.Location = new System.Drawing.Point(0, 0);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(299, 631);
+            this.panel6.TabIndex = 0;
+            // 
+            // button11
+            // 
+            this.button11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button11.Location = new System.Drawing.Point(102, 568);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(173, 37);
+            this.button11.TabIndex = 17;
+            this.button11.Text = "Apply";
+            this.button11.UseVisualStyleBackColor = true;
+            // 
+            // richTextBox2
+            // 
+            this.richTextBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox2.Enabled = false;
+            this.richTextBox2.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBox2.Location = new System.Drawing.Point(26, 34);
+            this.richTextBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.richTextBox2.Name = "richTextBox2";
+            this.richTextBox2.Size = new System.Drawing.Size(249, 518);
+            this.richTextBox2.TabIndex = 16;
+            this.richTextBox2.Text = "";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Enabled = false;
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Location = new System.Drawing.Point(22, 12);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(139, 20);
+            this.label11.TabIndex = 15;
+            this.label11.Text = "User Sketch Code";
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.listBox2);
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Size = new System.Drawing.Size(299, 631);
+            this.tabPage2.TabIndex = 2;
+            this.tabPage2.Text = "Log";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // listBox2
+            // 
+            this.listBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listBox2.FormattingEnabled = true;
+            this.listBox2.ItemHeight = 15;
+            this.listBox2.Location = new System.Drawing.Point(0, 0);
+            this.listBox2.Name = "listBox2";
+            this.listBox2.Size = new System.Drawing.Size(299, 631);
+            this.listBox2.TabIndex = 0;
+            // 
             // timer_form_load
             // 
             this.timer_form_load.Interval = 10;
@@ -802,74 +873,9 @@
             this.timer_util.Interval = 1000;
             this.timer_util.Tick += new System.EventHandler(this.timer_util_Tick);
             // 
-            // tabPage1
+            // timer_monitoring
             // 
-            this.tabPage1.Controls.Add(this.panel6);
-            this.tabPage1.Location = new System.Drawing.Point(4, 25);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(299, 631);
-            this.tabPage1.TabIndex = 1;
-            this.tabPage1.Text = "User Sketch";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // panel6
-            // 
-            this.panel6.Controls.Add(this.button11);
-            this.panel6.Controls.Add(this.richTextBox2);
-            this.panel6.Controls.Add(this.label11);
-            this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel6.Location = new System.Drawing.Point(0, 0);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(299, 634);
-            this.panel6.TabIndex = 0;
-            // 
-            // button11
-            // 
-            this.button11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button11.Location = new System.Drawing.Point(102, 571);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(173, 37);
-            this.button11.TabIndex = 17;
-            this.button11.Text = "Apply";
-            this.button11.UseVisualStyleBackColor = true;
-            // 
-            // richTextBox2
-            // 
-            this.richTextBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBox2.Enabled = false;
-            this.richTextBox2.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBox2.Location = new System.Drawing.Point(26, 34);
-            this.richTextBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(249, 521);
-            this.richTextBox2.TabIndex = 16;
-            this.richTextBox2.Text = "";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Enabled = false;
-            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(22, 12);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(139, 20);
-            this.label11.TabIndex = 15;
-            this.label11.Text = "User Sketch Code";
-            // 
-            // customTabControl1
-            // 
-            this.customTabControl1.AllowDrop = true;
-            this.customTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.customTabControl1.Location = new System.Drawing.Point(0, 0);
-            this.customTabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.customTabControl1.Name = "customTabControl1";
-            this.customTabControl1.SelectedIndex = 0;
-            this.customTabControl1.Size = new System.Drawing.Size(733, 660);
-            this.customTabControl1.TabIndex = 3;
-            this.customTabControl1.DragDrop += new System.Windows.Forms.DragEventHandler(this.customTabControl1_DragDrop);
-            this.customTabControl1.DragEnter += new System.Windows.Forms.DragEventHandler(this.customTabControl1_DragEnter);
+            this.timer_monitoring.Tick += new System.EventHandler(this.timer_monitoring_Tick);
             // 
             // MainForm
             // 
@@ -910,10 +916,11 @@
             this.tabPage5.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
-            this.contextMenuStrip2.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.contextMenuStrip2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -988,13 +995,14 @@
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button9;
-        private System.Windows.Forms.Button button10;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.RichTextBox richTextBox2;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.ListBox listBox2;
+        private System.Windows.Forms.Timer timer_monitoring;
     }
 }
 
