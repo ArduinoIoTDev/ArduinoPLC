@@ -1,0 +1,247 @@
+import processing.serial.*;
+
+Serial myPort;  
+
+
+PImage img_bg;
+
+PImage img_btn_on;
+PImage img_btn_off;
+
+PImage img_switch_on;
+PImage img_switch_off;
+
+PImage img_light_on;
+PImage img_light_off;
+
+
+int btn_size = 200;
+
+boolean[] switch_press_list = new boolean[10]; 
+
+int btn_pressed = 0;
+int switch_on = 1;
+int switch_pressed = 0;
+int light_on = 0;
+
+
+void setup()
+{
+  size(1200, 800);
+  
+  for (int i = 0; i < 10; i++)
+  {
+    switch_press_list[i] = false;
+  }
+    
+  img_bg = loadImage("../images/bg_tile.png");
+  img_btn_on = loadImage("../images/button_yellow_on.png");
+  img_btn_off = loadImage("../images/button_yellow_off.png");
+  
+  img_switch_on = loadImage("../images/switch_on.png");
+  img_switch_off = loadImage("../images/switch_off.png");
+  
+  img_light_on = loadImage("../images/light_on_blue.png");
+  img_light_off = loadImage("../images/light_off.png");
+  
+  
+  if (Serial.list() != null && Serial.list().length > 0)
+  {
+      println(Serial.list());
+      myPort = new Serial(this, Serial.list()[0], 115200);  
+  }
+}
+
+
+long start_time = 0;
+long end_time = 0;
+
+String recv_str = "";
+String remained_str = "";
+String tocken_str = "";
+
+long send_chk_cnt = 0;
+
+void draw()
+{
+  
+  send_chk_cnt++;
+  
+  if ((send_chk_cnt % 50) == 0)
+      myPort.write("[SIM_ON]");
+  
+  
+  while (myPort != null && myPort.available() > 0)
+  {
+    String inBuffer = myPort.readString();
+    
+    recv_str = recv_str + inBuffer;
+        
+    for (int i = 0; i < recv_str.length(); i++)
+    {
+       if (recv_str.charAt(i) == '[')
+       {
+         tocken_str = "";
+       }
+       else if (recv_str.charAt(i) == ']')
+       {
+
+         if (tocken_str.equals("P00040=1"))
+         {
+            light_on = 1;
+         }
+         else if (tocken_str.equals("P00040=0"))
+         {
+            light_on = 0;
+         }
+                  
+       
+         if (i < (recv_str.length() - 1))       
+            remained_str = recv_str.substring(i + 1);
+         else
+            remained_str = "";
+         
+         tocken_str = "";
+       }
+       else
+         tocken_str = tocken_str + recv_str.charAt(i);
+    }
+    
+    recv_str = remained_str;
+        
+    
+  }
+
+  
+  
+  draw_bg();
+  
+  
+  if (click_check_btn(50, 50))
+  {
+    draw_btn_on(50, 50);
+    
+    if (btn_pressed == 0)
+    {      
+      myPort.write("[P00000=1]");
+    }
+    
+    btn_pressed = 1;
+  }
+  else
+  {    
+    draw_btn_off(50, 50); 
+    
+    if (btn_pressed == 1)
+    {
+      myPort.write("[P00000=0]");
+    }
+    
+    btn_pressed = 0;
+  }
+  
+  
+  
+  //Switch
+  if (click_check_btn(50, 300))
+  {
+      if (switch_pressed == 0)
+      {
+          if (switch_on == 1)
+          {
+            switch_on = 0;
+            myPort.write("[P00001=0]");
+          }
+          else
+          {
+            switch_on = 1;
+            myPort.write("[P00001=1]");
+          }
+      }
+      
+      switch_pressed = 1;    
+  }
+  else
+  {
+      switch_pressed = 0;
+  }
+  
+  if (switch_on == 1)
+  {
+    draw_switch_on(50, 300);
+  }
+  else  
+  {
+    draw_switch_off(50, 300);
+  }
+  
+  
+  
+  //Light
+  if (light_on == 1)
+  {
+    draw_light_on(300, 50);
+  }
+  else  
+  {
+    draw_light_off(300, 50);
+  }
+  
+}
+
+void draw_bg()
+{
+  for (int y = 0; y < 2; y++)
+  {
+    for (int x = 0; x < 3; x++)
+    {
+      image(img_bg, x * 400, y * 400, 400, 400);
+    }
+  }
+}
+
+boolean click_check_btn(int x, int y)
+{
+  boolean res = false;
+  
+  if (mousePressed)
+  {
+    if (mouseX >= x && mouseX <= (x + btn_size) && mouseY >= y && mouseY <= (y + btn_size))
+      res = true;
+  }
+  
+  return res;
+}
+
+void draw_btn_on(int x, int y)
+{
+  image(img_btn_on, x, y, btn_size, btn_size);
+}
+
+void draw_btn_off(int x, int y)
+{
+  image(img_btn_off, x, y, btn_size, btn_size);
+}
+
+
+void draw_switch_on(int x, int y)
+{
+  image(img_switch_on, x, y, btn_size, btn_size);
+}
+
+void draw_switch_off(int x, int y)
+{
+  image(img_switch_off, x, y, btn_size, btn_size);
+}
+
+
+
+void draw_light_on(int x, int y)
+{
+  image(img_light_on, x, y, btn_size, btn_size);
+}
+
+void draw_light_off(int x, int y)
+{
+  image(img_light_off, x, y, btn_size, btn_size);
+}
